@@ -33,3 +33,21 @@ CREATE TABLE Programme (
   UNIQUE(ProgrammeCode, CourseCode)
 );
 
+-- Create table `Student`.
+CREATE TABLE Student (
+  MatricNumber  INT             PRIMARY KEY NOT NULL,
+  Firstname     VARCHAR(15)     NOT NULL,
+  Lastname      VARCHAR(15)     NOT NULL,
+  BirthDate     DATE            NOT NULL,
+  HomeStreet    VARCHAR(30)     NOT NULL,
+  HomeCity      VARCHAR(15)     NOT NULL,
+  HomePostcode  INT             NOT NULL,
+  CurrentCGPA   DECIMAL(10, 2)  DEFAULT 0,
+  Status        VARCHAR(10)     NOT NULL,
+  Level         VARCHAR(10)     NOT NULL,
+
+  ProgrammeCode VARCHAR(10)     NOT NULL,
+  FOREIGN KEY FK_Programme_ProgrammeCode(ProgrammeCode)
+    REFERENCES Programme(ProgrammeCode)
+);
+
