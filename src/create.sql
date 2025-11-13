@@ -23,16 +23,6 @@ CREATE TABLE coordinator (
   qualification VARCHAR(20) NOT NULL
 );
 
--- Create table `course`.
-CREATE TABLE course (
-  course_code VARCHAR(10) PRIMARY KEY NOT NULL,
-  title       VARCHAR(50) NOT NULL,
-  credit_hour INT         NOT NULL,
-
-  -- TODO: Check the data type of `Semester`.
-  semester    INT         NOT NULL
-);
-
 -- Create table `programme`.
 -- TODO:
 --  1. Check the data type of `Duration`.
@@ -44,14 +34,20 @@ CREATE TABLE programme (
 
   coordinator_id     INT           NOT NULL,
   FOREIGN KEY fk_coordinator_staff_id(coordinator_id)
-    REFERENCES coordinator(staff_id),
+    REFERENCES coordinator(staff_id)
+);
 
-  course_code     VARCHAR(10)   NOT NULL,
-  FOREIGN KEY fk_course_course_code(course_code)
-    REFERENCES course(course_code),
+-- Create table `course`.
+-- TODO: Check the data type of `semester`.
+CREATE TABLE course (
+  course_code     VARCHAR(10) PRIMARY KEY NOT NULL,
+  title           VARCHAR(50) NOT NULL,
+  credit_hour     INT         NOT NULL,
+  semester        INT         NOT NULL,
 
-  -- Prevent a programme from having multiple same courses.
-  UNIQUE(programme_code, course_code)
+  programme_code  VARCHAR(10)   NOT NULL,
+  FOREIGN KEY fk_programme_programme_code(programme_code)
+    REFERENCES programme(programme_code)
 );
 
 -- Create table `student`.
