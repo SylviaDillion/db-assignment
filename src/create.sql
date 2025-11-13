@@ -36,13 +36,15 @@ CREATE TABLE course (
 -- Create table `programme`.
 -- TODO:
 --  1. Check the data type of `Duration`.
---  2. Set `Coordinator` as a foreign key.
 CREATE TABLE programme (
   programme_code  VARCHAR(10)   PRIMARY KEY NOT NULL,
   name            VARCHAR(50)   NOT NULL,
   faculty         VARCHAR(50)   NOT NULL,
   duration        INT           NOT NULL DEFAULT 4,
-  coordinator     VARCHAR(50)   NULL,
+
+  coordinator_id     INT           NOT NULL,
+  FOREIGN KEY fk_coordinator_staff_id(coordinator_id)
+    REFERENCES coordinator(staff_id),
 
   course_code     VARCHAR(10)   NOT NULL,
   FOREIGN KEY fk_course_course_code(course_code)
