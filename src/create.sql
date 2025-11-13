@@ -4,6 +4,25 @@ DROP DATABASE IF EXISTS student_course;
 CREATE DATABASE student_course;
 USE student_course;
 
+-- Create table `staff` to be the superclass of `advisor` and `coordinator`.
+CREATE TABLE staff (
+  staff_id          INT           PRIMARY KEY NOT NULL,
+  name              VARCHAR(20)   NOT NULL,
+  contact_number    VARCHAR(11)   NOT NULL,
+  department        VARCHAR(50)   NOT NULL,
+  office_location   VARCHAR(100)  NOT NULL
+);
+
+-- Create table `coordinator`.
+CREATE TABLE coordinator (
+  staff_id      INT         PRIMARY KEY NOT NULL,
+  FOREIGN KEY fk_staff_staff_id(staff_id)
+    REFERENCES staff(staff_id),
+
+  start_year    INT         NOT NULL,
+  qualification VARCHAR(20) NOT NULL
+);
+
 -- Create table `course`.
 CREATE TABLE course (
   course_code VARCHAR(10) PRIMARY KEY NOT NULL,
@@ -51,15 +70,6 @@ CREATE TABLE student (
     REFERENCES programme(programme_code)
 );
 
--- Create table `staff` to be the superclass of `advisor` and `coordinator`.
-CREATE TABLE staff (
-  staff_id          INT           PRIMARY KEY NOT NULL,
-  name              VARCHAR(20)   NOT NULL,
-  contact_number    VARCHAR(11)   NOT NULL,
-  department        VARCHAR(50)   NOT NULL,
-  office_location   VARCHAR(100)  NOT NULL
-);
-
 -- Create table `advisor`.
 CREATE TABLE advisor (
   staff_id        INT   PRIMARY KEY NOT NULL,
@@ -70,16 +80,6 @@ CREATE TABLE advisor (
   matric_number   INT   NOT NULL UNIQUE,
   FOREIGN KEY fk_student_matric_number(matric_number)
     REFERENCES student(matric_number)
-);
-
--- Create table `coordinator`.
-CREATE TABLE coordinator (
-  staff_id      INT         PRIMARY KEY NOT NULL,
-  FOREIGN KEY fk_staff_staff_id(staff_id)
-    REFERENCES staff(staff_id),
-
-  start_year    INT         NOT NULL,
-  qualification VARCHAR(20) NOT NULL
 );
 
 -- Create table `enrollment`.
