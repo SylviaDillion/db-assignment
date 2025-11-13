@@ -4,10 +4,19 @@ DROP DATABASE IF EXISTS student_course;
 CREATE DATABASE student_course;
 USE student_course;
 
+-- Create table `person` to be the superclass of `student` and `staff`.
+CREATE TABLE person (
+  id          VARCHAR(16)     PRIMARY KEY NOT NULL,
+  firstname   VARCHAR(15)     NOT NULL,
+  lastname    VARCHAR(15)     NOT NULL
+);
+
 -- Create table `staff` to be the superclass of `advisor` and `coordinator`.
 CREATE TABLE staff (
-  staff_id          INT           PRIMARY KEY NOT NULL,
-  name              VARCHAR(20)   NOT NULL,
+  staff_id          VARCHAR(16)   PRIMARY KEY NOT NULL,
+  FOREIGN KEY fk_person_id(staff_id)
+    REFERENCES person(id),
+
   contact_number    VARCHAR(11)   NOT NULL,
   department        VARCHAR(50)   NOT NULL,
   office_location   VARCHAR(100)  NOT NULL
@@ -15,7 +24,7 @@ CREATE TABLE staff (
 
 -- Create table `coordinator`.
 CREATE TABLE coordinator (
-  staff_id      INT         PRIMARY KEY NOT NULL,
+  staff_id      VARCHAR(16)   PRIMARY KEY NOT NULL,
   FOREIGN KEY fk_staff_staff_id(staff_id)
     REFERENCES staff(staff_id),
 
@@ -32,7 +41,7 @@ CREATE TABLE programme (
   faculty         VARCHAR(50)   NOT NULL,
   duration        INT           NOT NULL DEFAULT 4,
 
-  coordinator_id     INT           NOT NULL,
+  coordinator_id  VARCHAR(16)   NOT NULL,
   FOREIGN KEY fk_coordinator_staff_id(coordinator_id)
     REFERENCES coordinator(staff_id)
 );
@@ -52,16 +61,16 @@ CREATE TABLE course (
 
 -- Create table `advisor`.
 CREATE TABLE advisor (
-  staff_id        INT   PRIMARY KEY NOT NULL,
-  FOREIGN KEY fk_staff_staff_id(staff_id)
-    REFERENCES staff(staff_id)
+  staff_id  VARCHAR(16)   PRIMARY KEY NOT NULL,
+  FOREIGN KEY fk_staff_staff_id(staff_id) REFERENCES staff(staff_id)
 );
 
 -- Create table `student`.
 CREATE TABLE student (
-  matric_number   INT             PRIMARY KEY NOT NULL,
-  firstname       VARCHAR(15)     NOT NULL,
-  lastname        VARCHAR(15)     NOT NULL,
+  student_id      VARCHAR(16)     PRIMARY KEY NOT NULL,
+  FOREIGN KEY fk_person_id(student_id)
+    REFERENCES person(id),
+
   birth_date      DATE            NOT NULL,
   home_street     VARCHAR(30)     NOT NULL,
   home_city       VARCHAR(15)     NOT NULL,
@@ -74,7 +83,7 @@ CREATE TABLE student (
   FOREIGN KEY fk_programme_programme_code(programme_code)
     REFERENCES programme(programme_code),
 
-  advisor_id      INT             NOT NULL,
+  advisor_id      VARCHAR(15)     NOT NULL,
   FOREIGN KEY fk_advisor_staff_id(advisor_id)
     REFERENCES advisor(staff_id)
 );
@@ -87,13 +96,13 @@ CREATE TABLE enrollment (
   cgpa                DECIMAL(10, 2)  NOT NULL,
   final_grade         INT             NULL,
 
-  staff_id            INT             NOT NULL,
+  staff_id            VARCHAR(16)     NOT NULL,
   FOREIGN KEY fk_advisor_staff_id(staff_id)
     REFERENCES advisor(staff_id),
 
-  matric_number       INT             NOT NULL,
-  FOREIGN KEY fk_student_matric_number(matric_number)
-    REFERENCES student(matric_number),
+  student_id          VARCHAR(16)     NOT NULL,
+  FOREIGN KEY fk_student_student_id(student_id)
+    REFERENCES student(student_id),
 
   course_code         VARCHAR(10)     NOT NULL,
   FOREIGN KEY fk_course_course_code(course_code)
