@@ -1,106 +1,106 @@
 -- Create and switch to the database
 -- after dropping the existed one.
-DROP DATABASE IF EXISTS StudentCourse;
-CREATE DATABASE StudentCourse;
-USE StudentCourse;
+DROP DATABASE IF EXISTS student_course;
+CREATE DATABASE student_course;
+USE student_course;
 
 -- Create table `Course`.
-CREATE TABLE Course (
-  CourseCode  VARCHAR(10) PRIMARY KEY NOT NULL,
-  Title       VARCHAR(50) NOT NULL,
-  CreditHour  INT         NOT NULL,
+CREATE TABLE course (
+  course_code  VARCHAR(10) PRIMARY KEY NOT NULL,
+  title       VARCHAR(50) NOT NULL,
+  credit_hour  INT         NOT NULL,
 
   -- TODO: Check the data type of `Semester`.
-  Semester    INT         NOT NULL
+  semester    INT         NOT NULL
 );
 
 -- Create table `Programme`.
 -- TODO:
 --  1. Check the data type of `Duration`.
 --  2. Set `Coordinator` as a foreign key.
-CREATE TABLE Programme (
-  ProgrammeCode   VARCHAR(10)   PRIMARY KEY NOT NULL,
-  Name            VARCHAR(50)   NOT NULL,
-  Faculty         VARCHAR(50)   NOT NULL,
-  Duration        INT           NOT NULL DEFAULT 4,
-  Coordinator     VARCHAR(50)   NULL,
+CREATE TABLE programme (
+  programme_code   VARCHAR(10)   PRIMARY KEY NOT NULL,
+  name            VARCHAR(50)   NOT NULL,
+  faculty         VARCHAR(50)   NOT NULL,
+  duration        INT           NOT NULL DEFAULT 4,
+  coordinator     VARCHAR(50)   NULL,
 
-  CourseCode      VARCHAR(10)   NOT NULL,
-  FOREIGN KEY FK_Course_CourseCode(CourseCode)
-    REFERENCES Course(CourseCode),
+  course_code      VARCHAR(10)   NOT NULL,
+  FOREIGN KEY fk_course_course_code(course_code)
+    REFERENCES course(course_code),
 
   -- Prevent a programme from having multiple same courses.
-  UNIQUE(ProgrammeCode, CourseCode)
+  UNIQUE(programme_code, course_code)
 );
 
 -- Create table `Student`.
-CREATE TABLE Student (
-  MatricNumber  INT             PRIMARY KEY NOT NULL,
-  Firstname     VARCHAR(15)     NOT NULL,
-  Lastname      VARCHAR(15)     NOT NULL,
-  BirthDate     DATE            NOT NULL,
-  HomeStreet    VARCHAR(30)     NOT NULL,
-  HomeCity      VARCHAR(15)     NOT NULL,
-  HomePostcode  INT             NOT NULL,
-  CurrentCGPA   DECIMAL(10, 2)  DEFAULT 0,
-  Status        VARCHAR(10)     NOT NULL,
-  Level         VARCHAR(10)     NOT NULL,
+CREATE TABLE student (
+  matric_number  INT             PRIMARY KEY NOT NULL,
+  firstname     VARCHAR(15)     NOT NULL,
+  lastname      VARCHAR(15)     NOT NULL,
+  birth_date     DATE            NOT NULL,
+  home_street    VARCHAR(30)     NOT NULL,
+  home_city      VARCHAR(15)     NOT NULL,
+  home_postcode  INT             NOT NULL,
+  current_cgpa   DECIMAL(10, 2)  DEFAULT 0,
+  status        VARCHAR(10)     NOT NULL,
+  level         VARCHAR(10)     NOT NULL,
 
-  ProgrammeCode VARCHAR(10)     NOT NULL,
-  FOREIGN KEY FK_Programme_ProgrammeCode(ProgrammeCode)
-    REFERENCES Programme(ProgrammeCode)
+  programme_code VARCHAR(10)     NOT NULL,
+  FOREIGN KEY fk_programme_programme_code(programme_code)
+    REFERENCES programme(programme_code)
 );
 
 -- Create table `Staff` to be the superclass of `Advisor` and `Coordinator`.
-CREATE TABLE Staff (
-  StaffID         INT           PRIMARY KEY NOT NULL,
-  Name            VARCHAR(20)   NOT NULL,
-  ContactNumber   VARCHAR(11)   NOT NULL,
-  Department      VARCHAR(50)   NOT NULL,
-  OfficeLocation  VARCHAR(100)  NOT NULL
+CREATE TABLE staff (
+  staff_id         INT           PRIMARY KEY NOT NULL,
+  name            VARCHAR(20)   NOT NULL,
+  contact_number   VARCHAR(11)   NOT NULL,
+  department      VARCHAR(50)   NOT NULL,
+  office_location  VARCHAR(100)  NOT NULL
 );
 
 -- Create table `Advisor`.
-CREATE TABLE Advisor (
-  StaffID       INT   PRIMARY KEY NOT NULL,
-  FOREIGN KEY FK_Staff_StaffID(StaffID)
-    REFERENCES Staff(StaffID),
+CREATE TABLE advisor (
+  staff_id       INT   PRIMARY KEY NOT NULL,
+  FOREIGN KEY fk_staff_staff_id(staff_id)
+    REFERENCES staff(staff_id),
 
   -- Set to unique to avoid duplicated assignments.
-  MatricNumber  INT   NOT NULL UNIQUE,
-  FOREIGN KEY FK_Student_MatricNumber(MatricNumber)
-    REFERENCES Student(MatricNumber)
+  matric_number  INT   NOT NULL UNIQUE,
+  FOREIGN KEY fk_student_matric_number(matric_number)
+    REFERENCES student(matric_number)
 );
 
 -- Create table `Coordinator`.
-CREATE TABLE Coordinator (
-  StaffID         INT           PRIMARY KEY NOT NULL,
-  FOREIGN KEY FK_Staff_StaffID(StaffID)
-    REFERENCES Staff(StaffID),
+CREATE TABLE coordinator (
+  staff_id         INT           PRIMARY KEY NOT NULL,
+  FOREIGN KEY fk_staff_staff_id(staff_id)
+    REFERENCES staff(staff_id),
 
   -- Avoid duplicated assignments.
-  ProgrammeCode   VARCHAR(10)   NOT NULL UNIQUE,
-  FOREIGN KEY FK_Programme_ProgrammeCode(ProgrammeCode)
-    REFERENCES Programme(ProgrammeCode)
+  programme_code   VARCHAR(10)   NOT NULL UNIQUE,
+  FOREIGN KEY fk_programme_programme_code(programme_code)
+    REFERENCES programme(programme_code)
 );
 
 -- Create table `Enrollment`.
-CREATE TABLE Enrollment (
-  ID                INT             PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  AcademicSession   VARCHAR(10)     NOT NULL,
-  RegistrationDate  DATE            NOT NULL,
-  CGPA              DECIMAL(10, 2)  NOT NULL,
-  FinalGrade        INT             NULL,
+CREATE TABLE enrollment (
+  id                INT             PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  academic_session   VARCHAR(10)     NOT NULL,
+  registration_date  DATE            NOT NULL,
+  cgpa              DECIMAL(10, 2)  NOT NULL,
+  final_grade        INT             NULL,
 
-  StaffID           INT             NOT NULL,
-  FOREIGN KEY FK_Advisor_StaffID(StaffID)
-    REFERENCES Advisor(StaffID),
+  staff_id           INT             NOT NULL,
+  FOREIGN KEY fk_advisor_staff_id(staff_id)
+    REFERENCES advisor(staff_id),
 
-  MatricNumber      INT             NOT NULL,
-  FOREIGN KEY FK_Student_MatricNumber(MatricNumber)
-    REFERENCES Student(MatricNumber),
+  matric_number      INT             NOT NULL,
+  FOREIGN KEY fk_student_matric_number(matric_number)
+    REFERENCES student(matric_number),
 
-  CourseCode        VARCHAR(10)     NOT NULL,
-  FOREIGN KEY FK_Course_CourseCode(CourseCode)
-    REFERENCES Course(CourseCode)
+  course_code        VARCHAR(10)     NOT NULL,
+  FOREIGN KEY fk_course_course_code(course_code)
+    REFERENCES course(course_code)
 );
