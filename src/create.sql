@@ -29,7 +29,7 @@ CREATE TABLE coordinator (
     REFERENCES staff(staff_id),
 
   start_year    INT         NOT NULL,
-  qualification VARCHAR(20) NOT NULL
+  qualification VARCHAR(50) NOT NULL
 );
 
 -- Create table `programme`.
