@@ -66,7 +66,7 @@ CREATE TABLE course (
 CREATE TABLE advisor (
   advisor_id  VARCHAR(16)   PRIMARY KEY NOT NULL,
   FOREIGN KEY fk_staff_staff_id(advisor_id)
-    REFERENCES staff(advisor_id)
+    REFERENCES staff(staff_id)
 );
 
 -- Create table `student`.
