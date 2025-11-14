@@ -33,8 +33,6 @@ CREATE TABLE coordinator (
 );
 
 -- Create table `programme`.
--- TODO:
---  1. Check the data type of `Duration`.
 CREATE TABLE programme (
   programme_code  VARCHAR(10)   PRIMARY KEY NOT NULL,
   name            VARCHAR(50)   NOT NULL,
