@@ -5,6 +5,7 @@ CREATE DATABASE student_course;
 USE student_course;
 
 -- Create table `person` to be the superclass of `student` and `staff`.
+-- The format of `id` is different between `student` and `staff`.
 CREATE TABLE person (
   id          VARCHAR(16)     PRIMARY KEY NOT NULL,
   firstname   VARCHAR(15)     NOT NULL,
@@ -12,6 +13,8 @@ CREATE TABLE person (
 );
 
 -- Create table `staff` to be the superclass of `advisor` and `coordinator`.
+-- `staff_id` -- `S + programme code + start year + incremental ID`.
+--                e.g. `SCYS2012001`, `SCYS2013010`, etc.
 CREATE TABLE staff (
   staff_id          VARCHAR(16)   PRIMARY KEY NOT NULL,
   FOREIGN KEY fk_person_id(staff_id)
@@ -64,6 +67,8 @@ CREATE TABLE advisor (
 );
 
 -- Create table `student`.
+-- `student_id` -- `programme code + intake year + academic session + incremental ID`.
+--              -- e.g. `CYS2809001`, `CYS2704010`, etc.
 CREATE TABLE student (
   student_id      VARCHAR(16)     PRIMARY KEY NOT NULL,
   FOREIGN KEY fk_person_id(student_id)
