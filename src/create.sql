@@ -1,8 +1,8 @@
 -- Create and switch to the database
 -- after dropping the existed one.
-DROP DATABASE IF EXISTS student_course;
-CREATE DATABASE student_course;
-USE student_course;
+DROP DATABASE IF EXISTS enrollment_system;
+CREATE DATABASE enrollment_system;
+USE enrollment_system;
 
 -- Create table `person` to be the superclass of `student` and `staff`.
 -- The format of `id` is different between `student` and `staff`.
